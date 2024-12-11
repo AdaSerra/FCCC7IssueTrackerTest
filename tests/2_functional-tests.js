@@ -6,6 +6,7 @@ const server = require('../server');
 
 chai.use(chaiHttp);
 
+let _idtest
 suite('Functional Tests', function() {
     suite('POST /api/issues/{project}', function() {
      
@@ -18,9 +19,7 @@ suite('Functional Tests', function() {
             created_by: 'Functional Test - Every field filled in',
             assigned_to: 'Chai and Mocha',
             status_text: 'In QA',
-           // updated_on: "today",
-           // open:true,
-            //_id: "randomid"
+           
 
           })
           .end(function(err, res){
@@ -36,6 +35,7 @@ suite('Functional Tests', function() {
             assert.property(res.body, 'status_text');
             assert.property(res.body, 'updated_on');
             assert.property(res.body, '_id');
+            _idtest=res.body._id
             done();
           });
         });
@@ -227,13 +227,13 @@ suite('Functional Tests', function() {
             chai.request(server)
             .delete('/api/issues/test')
             .send({
-                _id: '6754cfee5925791344ebfd84',
+                _id: _idtest,
             
             })
             .end(function(err, res){
              
               assert.equal(res.status, 200);
-              assert.equal(res.text, '{"result":"successfully deleted","_id":"6754cfee5925791344ebfd84"}') 
+              assert.equal(res.text, `{"result":"successfully deleted","_id":"${_idtest}"}`) 
               done();
             });
           }); 
